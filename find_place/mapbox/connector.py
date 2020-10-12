@@ -2,20 +2,22 @@
 
 import requests
 from urllib import parse
-import pickle
 import os
+from dotenv import load_dotenv
 
 
 ROOTDIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-URL_PATTERN = 'https://api.mapbox.com/geocoding/v5/mapbox.places/{}.json?access_token={}'
+
+
+dotenv_path = os.path.join(ROOTDIR, '.env')
+if os.path.exists(dotenv_path):
+    load_dotenv(dotenv_path)
 
 
 def search_in_mapbox(place_name):
-    token_path = os.path.join(ROOTDIR, 'mapbox', 'token.pickle')
-    with open(token_path, 'rb') as f:
-        mapbox_token = pickle.load(f)['token']
-
+    url_pattern = os.getenv("URL_PATTERN")
+    mapbox_token = os.getenv("TOKEN")
     place_name_encoded = parse.quote(place_name)
-    url = URL_PATTERN.format(place_name_encoded, mapbox_token)
+    url = url_pattern.format(place_name_encoded, mapbox_token)
 
     return requests.get(url).json()
