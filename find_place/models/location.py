@@ -15,7 +15,7 @@ class Location(models.Model):
     country = fields.Char(string='Country')
 
     def search(self, args, offset=0, limit=None, order=None, count=False):
-        search_result = models.Model.search(self, args, offset, limit, order, count)
+        search_result = super().search(args, offset, limit, order, count)
 
         if args and not search_result:
             search_query = args[0][2]
